@@ -1,5 +1,5 @@
 // Point PETS_SOURCE at an API or JSON feed of Austin Pets Alive animals.
-// Expected shape: array of { name, species: "dog"|"cat", breed, age, image, url }.
+// Accepts the Austin Pets Alive export (object with a "pets" array) or a plain array; see normalizePet() in results.js.
 // Field names from a real feed can be mapped in normalizePet() in results.js.
 const CONFIG = {
   PETS_SOURCE: "data/pets.json",

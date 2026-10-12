@@ -4,14 +4,29 @@ const matchEl = document.getElementById("match");
 const petsEl = document.getElementById("pets");
 const actionsEl = document.getElementById("actions");
 
+function formatAge(a) {
+  if (!a) return "";
+  const y = a.years, m = a.months;
+  const parts = [];
+  if (y) parts.push(`${y} yr${y > 1 ? "s" : ""}`);
+  if (m || !y) parts.push(`${m} mo`);
+  return parts.join(" ");
+}
+
+// Maps the Austin Pets Alive export (data/pets.json) to the shape the cards use.
 function normalizePet(p) {
+  const species = String(p.species || "").toLowerCase();
+  const health = (p.health_conditions || []).map((h) => h.label).join(", ");
   return {
     name: p.name,
-    species: String(p.species || "").toLowerCase(),
+    species,
     breed: p.breed || "",
-    age: p.age || "",
+    age: formatAge(p.age),
+    fee: p.adoption_fee_usd != null ? `$${p.adoption_fee_usd}` : "",
+    location: p.location ? p.location.name : "",
+    health,
     image: p.image || "",
-    url: p.url || ""
+    url: p.profile_url || p.source_url || ""
   };
 }
 
@@ -21,16 +36,30 @@ function petCard(p) {
   a.href = p.url || CONFIG.APA_LINKS[p.species];
   a.target = "_blank";
   a.rel = "noopener";
-  const img = document.createElement("img");
-  img.alt = p.name;
-  img.loading = "lazy";
-  img.src = p.image;
+  let img;
+  if (p.image) {
+    img = document.createElement("img");
+    img.alt = p.name;
+    img.loading = "lazy";
+    img.src = p.image;
+  } else {
+    img = document.createElement("div");
+    img.className = "ph";
+    img.textContent = p.species === "dog" ? "🐶" : "🐱";
+  }
   const body = document.createElement("div");
   const name = document.createElement("strong");
   name.textContent = p.name;
   const meta = document.createElement("span");
   meta.textContent = [p.breed, p.age].filter(Boolean).join(" · ");
-  body.append(name, meta);
+  const extra = document.createElement("span");
+  extra.textContent = [p.fee, p.location].filter(Boolean).join(" · ");
+  body.append(name, meta, extra);
+  if (p.health) {
+    const h = document.createElement("span");
+    h.textContent = `Health: ${p.health}`;
+    body.append(h);
+  }
   a.append(img, body);
   return a;
 }
@@ -61,7 +90,8 @@ async function main() {
   try {
     const res = await fetch(CONFIG.PETS_SOURCE);
     if (!res.ok) throw new Error(res.status);
-    const pets = (await res.json()).map(normalizePet).filter((p) => p.species === species);
+    const data = await res.json();
+    const pets = (Array.isArray(data) ? data : data.pets).map(normalizePet).filter((p) => p.species === species);
     petsEl.replaceChildren(...pets.slice(0, CONFIG.MAX_PETS).map((p, i) => {
       const c = petCard(p);
       c.style.animationDelay = `${0.3 + i * 0.08}s`;
