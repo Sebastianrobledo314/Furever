@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pet Finder Quiz</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="stage">
+    <form id="card" class="card" novalidate>
+      <p class="progress" id="progress" aria-live="polite"></p>
+      <div class="bar" aria-hidden="true"><span id="barFill"></span></div>
+      <h1 id="question" tabindex="-1"></h1>
+      <div id="options" class="options" role="group" aria-labelledby="question"></div>
+      <p id="error" class="error" role="alert" hidden>Please pick an answer.</p>
+      <button type="submit" class="submit">Submit</button>
+      <p class="note">Your answers stay in your browser.</p>
+    </form>
+  </main>
+  <script src="js/questions.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>

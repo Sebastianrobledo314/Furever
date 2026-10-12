@@ -1,0 +1,6 @@
+[
+  { "name": "Sample Dog 1", "species": "dog", "breed": "Placeholder", "age": "Adult", "image": "", "url": "https://www.austinpetsalive.org/adopt/dogs" },
+  { "name": "Sample Dog 2", "species": "dog", "breed": "Placeholder", "age": "Young", "image": "", "url": "https://www.austinpetsalive.org/adopt/dogs" },
+  { "name": "Sample Cat 1", "species": "cat", "breed": "Placeholder", "age": "Adult", "image": "", "url": "https://www.austinpetsalive.org/adopt/cats" },
+  { "name": "Sample Cat 2", "species": "cat", "breed": "Placeholder", "age": "Kitten", "image": "", "url": "https://www.austinpetsalive.org/adopt/cats" }
+]
