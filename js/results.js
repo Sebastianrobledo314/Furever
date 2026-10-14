@@ -24,7 +24,7 @@ function normalizePet(p) {
     fee: p.fee != null ? `$${p.fee}` : "",
     location: p.loc || "",
     health: (p.health || []).join(", "),
-    image: "",
+    image: CONFIG.PET_IMAGES[p.species] || "",
     url: `${CONFIG.APA_LINKS[p.species]}/${p.id}`
   };
 }
