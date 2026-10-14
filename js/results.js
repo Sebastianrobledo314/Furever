@@ -4,29 +4,28 @@ const matchEl = document.getElementById("match");
 const petsEl = document.getElementById("pets");
 const actionsEl = document.getElementById("actions");
 
-function formatAge(a) {
-  if (!a) return "";
-  const y = a.years, m = a.months;
+function formatAge(months) {
+  if (months == null) return "";
+  const y = Math.floor(months / 12), m = months % 12;
   const parts = [];
   if (y) parts.push(`${y} yr${y > 1 ? "s" : ""}`);
   if (m || !y) parts.push(`${m} mo`);
   return parts.join(" ");
 }
 
-// Maps the Austin Pets Alive export (data/pets.json) to the shape the cards use.
+// Slim record: { id, name, species, breed, months, fee, loc, health[] }.
+// The profile link is built from the id, e.g. /adopt/dogs/apa-a-197045.
 function normalizePet(p) {
-  const species = String(p.species || "").toLowerCase();
-  const health = (p.health_conditions || []).map((h) => h.label).join(", ");
   return {
     name: p.name,
-    species,
+    species: p.species,
     breed: p.breed || "",
-    age: formatAge(p.age),
-    fee: p.adoption_fee_usd != null ? `$${p.adoption_fee_usd}` : "",
-    location: p.location ? p.location.name : "",
-    health,
-    image: p.image || "",
-    url: p.profile_url || p.source_url || ""
+    age: formatAge(p.months),
+    fee: p.fee != null ? `$${p.fee}` : "",
+    location: p.loc || "",
+    health: (p.health || []).join(", "),
+    image: "",
+    url: `${CONFIG.APA_LINKS[p.species]}/${p.id}`
   };
 }
 
@@ -91,7 +90,7 @@ async function main() {
     const res = await fetch(CONFIG.PETS_SOURCE);
     if (!res.ok) throw new Error(res.status);
     const data = await res.json();
-    const pets = (Array.isArray(data) ? data : data.pets).map(normalizePet).filter((p) => p.species === species);
+    const pets = data.map(normalizePet).filter((p) => p.species === species);
     petsEl.replaceChildren(...pets.slice(0, CONFIG.MAX_PETS).map((p, i) => {
       const c = petCard(p);
       c.style.animationDelay = `${0.3 + i * 0.08}s`;
