@@ -3,6 +3,7 @@ const headline = document.getElementById("headline");
 const matchEl = document.getElementById("match");
 const petsEl = document.getElementById("pets");
 const actionsEl = document.getElementById("actions");
+const heroEl = document.getElementById("hero");
 
 function formatAge(months) {
   if (months == null) return "";
@@ -116,6 +117,8 @@ async function main() {
   const dogPct = Number(raw);
   const species = dogPct >= 50 ? "dog" : "cat";
   const pct = species === "dog" ? dogPct : 100 - dogPct;
+  heroEl.src = CONFIG.PET_IMAGES[species];
+  heroEl.hidden = false;
   headline.textContent = species === "dog" ? "You're a dog person!" : "You're a cat person!";
   matchEl.textContent = `${pct}% match for a ${species}.`;
 

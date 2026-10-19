@@ -3,7 +3,7 @@
 const CONFIG = {
   PETS_SOURCE: "data/pets.json",
   MAX_PETS: 8,
-  PET_IMAGES: { dog: "images/pug.png", cat: "images/cattree.png" },
+  PET_IMAGES: { dog: "images/walk.png", cat: "images/catgraph.png" },
   APA_LINKS: {
     dog: "https://www.austinpetsalive.org/adopt/dogs",
     cat: "https://www.austinpetsalive.org/adopt/cats"

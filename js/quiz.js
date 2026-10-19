@@ -5,6 +5,21 @@ const progressEl = document.getElementById("progress");
 const barFill = document.getElementById("barFill");
 const errorEl = document.getElementById("error");
 
+// Background art: three slots (left, small, right). Each question shows a new set.
+const ART = ["pug", "cattree", "walk", "corgi", "catgraph", "blackcat"].map((n) => `images/${n}.png`);
+ART.forEach((src) => { new Image().src = src; });
+const slots = ["d-l", "d-s", "d-r"].map((c) => document.querySelector(`.decor .${c}`));
+const OFFSETS = [0, 1, 3]; // distinct mod 6, so no repeats on screen
+
+function renderArt(i) {
+  slots.forEach((el, k) => {
+    el.src = ART[(i + OFFSETS[k]) % ART.length];
+    el.classList.remove("swap");
+    void el.offsetWidth;
+    el.classList.add("swap");
+  });
+}
+
 const answers = [];
 let step = 0;
 
@@ -32,6 +47,7 @@ function render() {
       return label;
     })
   );
+  renderArt(step);
   titleEl.focus();
 }
 
