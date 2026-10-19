@@ -63,6 +63,50 @@ function petCard(p) {
   return a;
 }
 
+function list(items) {
+  const ul = document.createElement("ul");
+  items.forEach((t) => { const li = document.createElement("li"); li.textContent = t; ul.append(li); });
+  return ul;
+}
+
+function block(title, ...nodes) {
+  const d = document.createElement("div");
+  const h = document.createElement("h2");
+  h.textContent = title;
+  d.append(h, ...nodes);
+  return d;
+}
+
+function para(text) {
+  const p = document.createElement("p");
+  p.textContent = text;
+  return p;
+}
+
+function infoSection(species) {
+  const i = INFO[species];
+  const sec = document.createElement("section");
+  sec.id = "info";
+  sec.className = "info";
+  sec.hidden = true;
+  const compare = document.createElement("div");
+  compare.className = "two";
+  compare.append(block(i.compare.left, para(i.compare.leftText)), block(i.compare.right, para(i.compare.rightText)));
+  const dd = document.createElement("div");
+  dd.className = "two";
+  const dos = block("Do's", list(i.dos)); dos.className = "do";
+  const donts = block("Don'ts", list(i.donts)); donts.className = "dont";
+  dd.append(dos, donts);
+  sec.append(
+    block(`Why a ${species} fits you`, para(i.why)),
+    block("The benefits", list(i.benefits)),
+    block("Why adopt", para(i.adopt)),
+    block(i.compare.title, compare),
+    dd
+  );
+  return sec;
+}
+
 async function main() {
   if (raw === null) {
     headline.textContent = "Take the quiz first!";
@@ -80,11 +124,21 @@ async function main() {
   link.target = "_blank";
   link.rel = "noopener";
   link.textContent = `See all ${species}s at Austin Pets Alive`;
-  const retake = document.createElement("a");
-  retake.href = "index.html";
-  retake.className = "alt";
-  retake.textContent = "Retake the quiz";
-  actionsEl.append(link, retake);
+  const learn = document.createElement("button");
+  learn.type = "button";
+  learn.className = "alt";
+  learn.textContent = `What to know about ${species}s`;
+  learn.setAttribute("aria-expanded", "false");
+  learn.setAttribute("aria-controls", "info");
+  const info = infoSection(species);
+  learn.addEventListener("click", () => {
+    const open = info.hidden;
+    info.hidden = !open;
+    learn.setAttribute("aria-expanded", String(open));
+    if (open) info.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  actionsEl.append(link, learn);
+  actionsEl.after(info);
 
   try {
     const res = await fetch(CONFIG.PETS_SOURCE);
