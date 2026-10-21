@@ -134,6 +134,7 @@ h1 {
 .actions button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 .info { margin-top: 1.5rem; padding: 1.25rem; background: var(--option); border-radius: 12px; animation: fadeUp .4s ease-out both; scroll-margin-top: 1rem; }
 .info[hidden] { display: none; }
+.info.summary { margin: 1.5rem 0 0; animation-delay: .4s; }
 .info h2 { margin: 1.25rem 0 0.4rem; font-size: 1.2rem; }
 .info > div:first-child h2 { margin-top: 0; }
 .info p { margin: 0; line-height: 1.5; }

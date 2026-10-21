@@ -99,12 +99,18 @@ function infoSection(species) {
   const donts = block("Don'ts", list(i.donts)); donts.className = "dont";
   dd.append(dos, donts);
   sec.append(
-    block(`Why a ${species} fits you`, para(i.why)),
-    block("The benefits", list(i.benefits)),
     block("Why adopt", para(i.adopt)),
     block(i.compare.title, compare),
     dd
   );
+  return sec;
+}
+
+function summarySection(species) {
+  const i = INFO[species];
+  const sec = document.createElement("section");
+  sec.className = "info summary";
+  sec.append(block(`Why a ${species} fits you`, para(i.why)), block("The benefits", list(i.benefits)));
   return sec;
 }
 
@@ -127,6 +133,8 @@ async function main() {
   link.target = "_blank";
   link.rel = "noopener";
   link.textContent = `See all ${species}s at Austin Pets Alive`;
+  petsEl.after(summarySection(species));
+
   const learn = document.createElement("button");
   learn.type = "button";
   learn.className = "alt";
